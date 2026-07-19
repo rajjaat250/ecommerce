@@ -69,13 +69,13 @@ function Productlist() {
                     
                     <div className="max-w-7xl mx-auto px-6 py-16 sm:py-24 relative z-10 flex flex-col lg:flex-row items-center">
                         <div className="w-full lg:w-1/2 mb-12 lg:mb-0">
-                            <span className="inline-block py-1 px-3 rounded-full bg-orange-100 text-orange-600 font-semibold text-sm tracking-wide mb-6">New Collection 2026</span>
+                            <span className="inline-block py-1 px-3 rounded-full bg-orange-100 text-orange-600 font-semibold text-sm tracking-wide mb-6">Season Exclusive</span>
                             <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tight leading-tight mb-8">
-                                Discover Our <br/>
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Premium Picks</span>
+                                Redefine Your <br/>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Aesthetic.</span>
                             </h1>
                             <p className="text-xl text-gray-600 mb-10 leading-relaxed font-medium max-w-lg">
-                                Explore a curated collection of high-end products designed to elevate your everyday lifestyle. Uncompromised quality meets stunning design.
+                                Curated fashion and premium essentials crafted for the modern lifestyle. Stand out with pieces that speak for themselves.
                             </p>
                         </div>
                         
