@@ -166,3 +166,19 @@ def register_user(request):
             }
         })
     return Response(serializer.errors, status=400)
+
+@api_view(['GET'])
+def create_superuser_view(request):
+    import os
+    username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'admin')
+    password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'admin123')
+    email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@example.com')
+    
+    if User.objects.filter(username=username).exists():
+        return Response({"message": f"Superuser {username} already exists!"})
+    
+    try:
+        User.objects.create_superuser(username, email, password)
+        return Response({"message": f"Superuser {username} created successfully!"})
+    except Exception as e:
+        return Response({"error": str(e)}, status=500)
