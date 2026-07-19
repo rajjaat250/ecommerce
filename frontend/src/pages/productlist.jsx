@@ -67,20 +67,54 @@ function Productlist() {
                     <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-orange-50 to-transparent"></div>
                     <div className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-orange-400/20 to-pink-500/20 rounded-full blur-3xl"></div>
                     
-                    <div className="max-w-7xl mx-auto px-6 py-24 sm:py-32 relative z-10">
-                        <div className="max-w-2xl">
+                    <div className="max-w-7xl mx-auto px-6 py-16 sm:py-24 relative z-10 flex flex-col lg:flex-row items-center">
+                        <div className="w-full lg:w-1/2 mb-12 lg:mb-0">
                             <span className="inline-block py-1 px-3 rounded-full bg-orange-100 text-orange-600 font-semibold text-sm tracking-wide mb-6">New Collection 2026</span>
                             <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tight leading-tight mb-8">
                                 Discover Our <br/>
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Premium Picks</span>
                             </h1>
-                            <p className="text-xl text-gray-600 mb-10 leading-relaxed font-medium">
+                            <p className="text-xl text-gray-600 mb-10 leading-relaxed font-medium max-w-lg">
                                 Explore a curated collection of high-end products designed to elevate your everyday lifestyle. Uncompromised quality meets stunning design.
                             </p>
+                        </div>
+                        
+                        {/* Moving Banner (Marquee) */}
+                        <div className="w-full lg:w-1/2 relative overflow-hidden h-[300px] flex items-center">
+                            {/* Gradient masks for smooth fade */}
+                            <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-white to-transparent z-20"></div>
+                            <div className="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-white to-transparent z-20 lg:hidden"></div>
+                            <div className="absolute top-0 bottom-0 right-0 w-32 bg-gradient-to-l from-orange-50 to-transparent z-20 hidden lg:block"></div>
+                            
+                            <div className="flex animate-[scrollX_20s_linear_infinite] whitespace-nowrap space-x-6 items-center">
+                                {/* Duplicate array to create infinite scroll effect */}
+                                {[...products.slice(0, 5), ...products.slice(0, 5)].map((product, idx) => (
+                                    <div key={`${product.id}-${idx}`} className="inline-block w-48 h-64 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden flex-shrink-0 flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
+                                        <div className="h-40 bg-gray-50 flex items-center justify-center p-4">
+                                            <img 
+                                                src={product.image?.startsWith('http') ? product.image : `${Baseurl}${product.image}`} 
+                                                alt={product.name} 
+                                                className="max-h-full max-w-full object-contain"
+                                            />
+                                        </div>
+                                        <div className="p-4 bg-white flex-1">
+                                            <p className="text-sm font-bold text-gray-900 truncate">{product.name}</p>
+                                            <p className="text-sm font-black text-orange-500 mt-1">₹{product.price}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
             )}
+            
+            <style dangerouslySetInnerHTML={{__html: `
+                @keyframes scrollX {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(calc(-50% - 0.75rem)); }
+                }
+            `}} />
 
             {/* List Header */}
             <div className="max-w-7xl mx-auto px-6 mb-12">
