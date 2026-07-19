@@ -113,7 +113,7 @@ function Navbar() {
           <div className="flex items-center space-x-6">
             <div className="hidden md:flex space-x-8 mr-4 items-center">
               <Link onClick={() => { setSearchQuery(""); }} to="/" className={`text-sm font-semibold transition-colors duration-200 ${location.pathname === '/' && !location.search ? 'text-orange-500' : 'text-gray-600 hover:text-orange-500'}`}>Home</Link>
-              <Link to="/" className="text-sm font-semibold text-gray-600 hover:text-orange-500 transition-colors duration-200">Shop</Link>
+              <Link onClick={() => { setSearchQuery(""); }} to="/" className="text-sm font-semibold text-gray-600 hover:text-orange-500 transition-colors duration-200">Shop</Link>
               <div className="relative group" onMouseEnter={() => setIsCategoryOpen(true)} onMouseLeave={() => setIsCategoryOpen(false)}>
                 <button className="text-sm font-semibold text-gray-600 hover:text-orange-500 transition-colors duration-200 flex items-center">
                   Categories
