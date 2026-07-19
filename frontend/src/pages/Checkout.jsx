@@ -71,17 +71,42 @@ function Checkout() {
 
     if (success) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
-                <div className="text-green-500 mb-6 p-8 bg-green-50 rounded-full">
-                    <svg className="w-24 h-24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
+            <div className="flex flex-col items-center justify-center min-h-[90vh] px-4 relative overflow-hidden bg-gray-50">
+                {/* Decorative background */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-green-300/30 to-teal-400/30 rounded-full blur-3xl pointer-events-none animate-pulse"></div>
+                
+                <div className="bg-white/90 backdrop-blur-xl p-10 md:p-14 rounded-[2.5rem] shadow-2xl border border-white/50 text-center relative z-10 max-w-lg w-full transform transition-all animate-bounce-short">
+                    <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-xl shadow-green-500/40 relative">
+                        {/* Ping effect behind the checkmark */}
+                        <div className="absolute inset-0 rounded-full border-4 border-green-400 animate-ping opacity-75"></div>
+                        <svg className="w-12 h-12 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    
+                    <h2 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-700 mb-4 tracking-tight">
+                        Order Successful!
+                    </h2>
+                    
+                    <p className="text-gray-500 mb-8 text-lg font-medium leading-relaxed">
+                        Thank you for your purchase. We are processing your order and will email you with updates shortly.
+                    </p>
+                    
+                    <div className="w-full h-1.5 bg-gray-100 mx-auto mb-8 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-[progress_3s_ease-in-out_forwards]"></div>
+                    </div>
+                    
+                    <button onClick={() => navigate('/')} className="w-full bg-gradient-to-r from-gray-900 to-gray-800 hover:from-black hover:to-gray-900 text-white font-bold py-4 px-8 rounded-2xl shadow-xl transform transition-all duration-300 hover:-translate-y-1 hover:shadow-gray-900/30 flex items-center justify-center">
+                        Continue Shopping
+                        <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                    </button>
                 </div>
-                <h2 className="text-4xl font-extrabold text-gray-900 mb-4 text-center">Order Placed Successfully!</h2>
-                <p className="text-gray-500 mb-8 text-center max-w-md text-lg">Thank you for shopping with us. You will be redirected to the home page shortly.</p>
-                <button onClick={() => navigate('/')} className="bg-gradient-to-r from-orange-500 to-pink-500 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition duration-300 hover:scale-105">
-                    Continue Shopping
-                </button>
+                
+                <style dangerouslySetInnerHTML={{__html: `
+                    @keyframes progress { 0% { width: 0%; } 100% { width: 100%; } }
+                    .animate-bounce-short { animation: bounce-short 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+                    @keyframes bounce-short { 0% { transform: scale(0.8) translateY(30px); opacity: 0; } 100% { transform: scale(1) translateY(0); opacity: 1; } }
+                `}} />
             </div>
         );
     }
