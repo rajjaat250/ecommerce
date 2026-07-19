@@ -147,6 +147,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "http://localhost:3000",
 ]
+
+frontend_url = os.environ.get("FRONTEND_URL")
+if frontend_url:
+    CORS_ALLOWED_ORIGINS.append(frontend_url)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
