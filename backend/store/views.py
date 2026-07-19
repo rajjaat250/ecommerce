@@ -6,6 +6,26 @@ from .models import Product, Category, UserProfile, Order, OrderItem, Cart, Cart
 
 # pyrefly: ignore [missing-import]
 from .serializers import ProductSerializer, CategorySerializer, CartItemSerializer, CartSerializer
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.conf import settings
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+import threading
+import os
+
+def send_email_async(subject, html_content, to_email):
+    def send():
+        try:
+            text_content = strip_tags(html_content)
+            msg = EmailMultiAlternatives(subject, text_content, settings.DEFAULT_FROM_EMAIL, [to_email])
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+        except Exception as e:
+            print(f"Error sending email: {e}")
+    threading.Thread(target=send).start()
 
 def get_cart(request):
     user = request.user if request.user.is_authenticated else None
@@ -155,6 +175,20 @@ def register_user(request):
         user = serializer.save()
         refresh = RefreshToken.for_user(user)
         refresh['username'] = user.username # Add custom claim
+        
+        # Send Welcome Email
+        try:
+            frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
+            if frontend_url.endswith('/'):
+                frontend_url = frontend_url[:-1]
+            html_content = render_to_string('emails/welcome.html', {
+                'user': user,
+                'frontend_url': frontend_url
+            })
+            send_email_async("Welcome to IndeStack!", html_content, user.email)
+        except Exception as e:
+            print(f"Welcome email error: {e}")
+
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
@@ -182,3 +216,53 @@ def create_superuser_view(request):
         return Response({"message": f"Superuser {username} created successfully!"})
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
+@api_view(['POST'])
+def password_reset_request(request):
+    email = request.data.get('email')
+    if not email:
+        return Response({'error': 'Email is required'}, status=400)
+    
+    try:
+        user = User.objects.get(email=email)
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        
+        frontend_url = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
+        if frontend_url.endswith('/'):
+            frontend_url = frontend_url[:-1]
+            
+        reset_link = f"{frontend_url}/reset-password?uid={uid}&token={token}"
+        
+        html_content = render_to_string('emails/password_reset.html', {
+            'user': user,
+            'reset_link': reset_link
+        })
+        send_email_async("Reset your IndeStack password", html_content, user.email)
+        
+        return Response({'message': 'Password reset link sent to your email.'})
+    except User.DoesNotExist:
+        # Don't reveal if user exists or not for security
+        return Response({'message': 'If an account exists with this email, a reset link has been sent.'})
+
+@api_view(['POST'])
+def password_reset_confirm(request):
+    uidb64 = request.data.get('uid')
+    token = request.data.get('token')
+    new_password = request.data.get('password')
+    
+    if not all([uidb64, token, new_password]):
+        return Response({'error': 'Missing required fields'}, status=400)
+        
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+        
+        if default_token_generator.check_token(user, token):
+            user.set_password(new_password)
+            user.save()
+            return Response({'message': 'Password has been reset successfully.'})
+        else:
+            return Response({'error': 'Invalid or expired reset link.'}, status=400)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        return Response({'error': 'Invalid reset link.'}, status=400)

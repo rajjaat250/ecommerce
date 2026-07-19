@@ -18,6 +18,7 @@ urlpatterns=[
     path('login/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     
-    # Temporary admin setup
     path('setup-admin/', views.create_superuser_view, name='setup_admin'),
+    path('password-reset/', views.password_reset_request, name='password_reset_request'),
+    path('password-reset-confirm/', views.password_reset_confirm, name='password_reset_confirm'),
 ]
