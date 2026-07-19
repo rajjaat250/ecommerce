@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+/* Increase global color saturation */
+body {
+  /* Very high saturation for mobile */
+  filter: saturate(1.4);
+}
+
+@media (min-width: 768px) {
+  body {
+    /* Little more high saturation for desktop */
+    filter: saturate(1.15);
+  }
+}
