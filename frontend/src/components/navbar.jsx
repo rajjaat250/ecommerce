@@ -178,32 +178,28 @@ function Navbar() {
           </div>
           
         </div>
+        
+        {/* Mobile Search Bar - Always Visible on small screens */}
+        <div className="md:hidden pb-4 pt-2">
+          <div className="flex items-center bg-gray-50/80 border border-gray-200 rounded-full px-4 py-2 focus-within:bg-white focus-within:shadow-md focus-within:border-orange-400 focus-within:ring-2 focus-within:ring-orange-100 w-full">
+            <svg className="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search premium products..."
+              className="bg-transparent outline-none w-full text-sm text-gray-700 placeholder-gray-400"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={handleSearchSubmit}
+            />
+          </div>
+        </div>
       </nav>
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-4 pt-2 pb-4 space-y-1 shadow-lg absolute w-full left-0 z-50">
-          <div className="mb-4 pt-2">
-            <div className="flex items-center bg-gray-50 border border-gray-200 rounded-full px-4 py-2">
-              <svg className="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input
-                type="text"
-                placeholder="Search products..."
-                className="bg-transparent outline-none w-full text-sm text-gray-700"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if(e.key === 'Enter') {
-                    setIsMobileMenuOpen(false);
-                    handleSearchSubmit(e);
-                  }
-                }}
-              />
-            </div>
-          </div>
-          
+        <div className="md:hidden bg-white border-t border-gray-100 px-4 pt-4 pb-4 space-y-1 shadow-lg absolute w-full left-0 z-50">
           <Link onClick={() => { setSearchQuery(""); setIsMobileMenuOpen(false); }} to="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50">Home</Link>
           <Link onClick={() => { setSearchQuery(""); setIsMobileMenuOpen(false); }} to="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-orange-500 hover:bg-orange-50">Shop</Link>
           
