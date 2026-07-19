@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    const baseURL = 'http://127.0.0.1:8000';
+    const baseURL = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000';
 
     useEffect(() => {
         const checkUserStatus = async () => {

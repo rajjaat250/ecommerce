@@ -15,8 +15,10 @@ function Navbar() {
   const [categories, setCategories] = useState([]);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
+  const Baseurl = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000';
+
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/categories/')
+    fetch(`${Baseurl}/categories/`)
       .then(res => res.json())
       .then(data => setCategories(data))
       .catch(err => console.error(err));
@@ -26,7 +28,7 @@ function Navbar() {
     if (searchQuery.trim().length > 0) {
       const fetchSuggestions = async () => {
         try {
-          const res = await fetch(`http://127.0.0.1:8000/products/?search=${searchQuery}`);
+          const res = await fetch(`${Baseurl}/products/?search=${searchQuery}`);
           const data = await res.json();
           setSuggestions(data.slice(0, 5));
         } catch (error) {
@@ -95,7 +97,7 @@ function Navbar() {
                       className="flex items-center px-4 py-3 hover:bg-orange-50 transition-colors"
                       onClick={() => setSearchQuery("")}
                     >
-                      <img src={`http://127.0.0.1:8000${item.image}`} alt={item.name} className="w-10 h-10 object-cover rounded-md" />
+                      <img src={item.image?.startsWith('http') ? item.image : `${Baseurl}${item.image}`} alt={item.name} className="w-10 h-10 object-cover rounded-md" />
                       <div className="ml-3">
                         <p className="text-sm font-medium text-gray-800">{item.name}</p>
                         <p className="text-xs text-gray-500">${item.price}</p>

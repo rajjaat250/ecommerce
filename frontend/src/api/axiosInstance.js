@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const baseURL = 'http://127.0.0.1:8000'; // Make sure this matches your django port
+const Baseurl = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000'; // Make sure this matches your django port
 
 const axiosInstance = axios.create({
-    baseURL: baseURL,
+    baseURL: Baseurl,
 });
 
 // Interceptor for attaching the access token
@@ -25,7 +25,7 @@ axiosInstance.interceptors.response.use(
             const refresh = localStorage.getItem('refresh');
             if (refresh) {
                 try {
-                    const res = await axios.post(`${baseURL}/token/refresh/`, { refresh });
+                    const res = await axios.post(`${Baseurl}/token/refresh/`, { refresh });
                     if (res.status === 200) {
                         localStorage.setItem('access', res.data.access);
                         originalRequest.headers.Authorization = `Bearer ${res.data.access}`;
