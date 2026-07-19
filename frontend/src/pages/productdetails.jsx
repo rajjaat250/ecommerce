@@ -12,6 +12,7 @@ function Productdetails() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isAdded, setIsAdded] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
     const Baseurl = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000';
 
@@ -89,18 +90,28 @@ function Productdetails() {
                 <div className="bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/50 flex flex-col lg:flex-row">
                     
                     {/* Image Section */}
-                    <div className="lg:w-1/2 relative min-h-[400px] lg:min-h-[600px] p-8 lg:p-12 flex justify-center items-center bg-gradient-to-br from-gray-50/50 to-gray-100/80 group">
+                    <div className="lg:w-1/2 relative min-h-[500px] lg:min-h-[700px] flex justify-center items-center bg-gray-50 group overflow-hidden">
                         {/* Abstract background shape behind image */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-orange-400/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="absolute inset-0 bg-gradient-to-br from-orange-400/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"></div>
                         
                         <img
                             src={imageUrl}
                             alt={product.name}
-                            className="relative z-10 w-full max-h-[500px] object-contain drop-shadow-2xl transform group-hover:scale-105 group-hover:-translate-y-2 transition-all duration-500 ease-out"
+                            className="relative z-10 w-full h-full object-cover object-top drop-shadow-sm transform group-hover:scale-105 transition-all duration-700 ease-out cursor-zoom-in"
+                            onClick={() => setIsFullscreen(true)}
                         />
                         
+                        {/* Fullscreen Expand Button */}
+                        <button 
+                            onClick={() => setIsFullscreen(true)}
+                            className="absolute bottom-6 right-6 z-20 bg-white/90 backdrop-blur-md p-3 rounded-full shadow-lg border border-gray-100 text-gray-700 hover:text-orange-500 hover:scale-110 transition-all duration-300"
+                            title="View Fullscreen"
+                        >
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+                        </button>
+                        
                         {product.category && (
-                            <div className="absolute top-8 left-8 z-20">
+                            <div className="absolute top-6 left-6 z-20">
                                 <span className="inline-block bg-white/90 backdrop-blur-md text-gray-800 text-xs px-4 py-2 rounded-full font-black uppercase tracking-widest shadow-sm border border-gray-100">
                                     {product.category.name}
                                 </span>
@@ -195,6 +206,28 @@ function Productdetails() {
                     </div>
                 </div>
             </div>
+        </div>
+            
+            {/* Fullscreen Image Modal */}
+            {isFullscreen && (
+                <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex items-center justify-center p-4 sm:p-8">
+                    <button 
+                        onClick={() => setIsFullscreen(false)}
+                        className="absolute top-6 right-6 z-50 text-white/70 hover:text-white bg-black/50 hover:bg-black p-3 rounded-full transition-all duration-300"
+                    >
+                        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                    
+                    <div className="relative w-full h-full flex items-center justify-center" onClick={() => setIsFullscreen(false)}>
+                        <img
+                            src={imageUrl}
+                            alt={product.name}
+                            className="max-w-full max-h-full object-contain drop-shadow-2xl cursor-zoom-out"
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
