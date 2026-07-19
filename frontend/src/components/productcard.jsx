@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 function ProductCard({ product }) {
-    const Baseurl = import.meta.env.VITE_BASE_URL;
+    const Baseurl = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000';
 
     return (
         <Link to={`/product/${product.id}`}>

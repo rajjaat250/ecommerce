@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import {useCart} from "../context/Cartcontext.jsx";
 
 function Productdetails() {
     const { id } = useParams();
+    const { addProduct } = useCart();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const Baseurl = import.meta.env.VITE_BASE_URL;
+    const Baseurl = import.meta.env.VITE_BASE_URL || 'http://127.0.0.1:8000';
 
     useEffect(() => {
         fetch(`${Baseurl}/products/${id}/`)
@@ -90,7 +92,10 @@ function Productdetails() {
                     </div>
                     
                     <div className="mt-auto pt-6">
-                        <button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-xl transition duration-300 shadow-lg hover:shadow-orange-500/30 transform hover:-translate-y-1 text-lg">
+                        <button 
+                            onClick={() => addProduct(product)}
+                            className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-xl transition duration-300 shadow-lg hover:shadow-orange-500/30 transform hover:-translate-y-1 text-lg"
+                        >
                             Add to Cart
                         </button>
                     </div>

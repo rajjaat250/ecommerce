@@ -1,0 +1,169 @@
+import React, { useContext, useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useCart } from "../context/Cartcontext.jsx";
+import { AuthContext } from "../context/AuthContext.jsx";
+
+function Navbar() {
+  const { cart } = useCart();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logoutUser } = useContext(AuthContext);
+  
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/categories/')
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(err => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    if (searchQuery.trim().length > 0) {
+      const fetchSuggestions = async () => {
+        try {
+          const res = await fetch(`http://127.0.0.1:8000/products/?search=${searchQuery}`);
+          const data = await res.json();
+          setSuggestions(data.slice(0, 5));
+        } catch (error) {
+          console.error("Error fetching suggestions", error);
+        }
+      };
+      const debounceTimer = setTimeout(fetchSuggestions, 300);
+      return () => clearTimeout(debounceTimer);
+    } else {
+      setSuggestions([]);
+    }
+  }, [searchQuery]);
+
+  const handleSearchSubmit = (e) => {
+    if (e.key === 'Enter') {
+      setShowSuggestions(false);
+      navigate(`/?search=${searchQuery}`);
+    }
+  };
+  const cartcount = Array.isArray(cart) ? cart.reduce((total, item) => total + (item.quantity || 0), 0) : 0;
+  
+  return (
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-20 items-center">
+          
+          {/* Logo Section */}
+          <div className="flex items-center space-x-8">
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="w-12 h-12 bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-xl flex items-center justify-center shadow-xl shadow-gray-900/20 transform group-hover:scale-105 transition-all duration-300 border border-gray-700/50 relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50"></div>
+                <span className="text-transparent bg-clip-text bg-gradient-to-br from-orange-400 to-pink-500 font-black text-xl tracking-wider relative z-10">
+                  IS
+                </span>
+              </div>
+              <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 tracking-tight">
+                IndeStack
+              </span>
+            </Link>
+
+            {/* Search Bar */}
+            <div className="relative hidden lg:block z-50">
+              <div className="flex items-center bg-gray-50/80 border border-gray-200 rounded-full px-4 py-2 hover:bg-white hover:shadow-md hover:border-gray-300 transition-all duration-300 focus-within:bg-white focus-within:shadow-md focus-within:border-orange-400 focus-within:ring-2 focus-within:ring-orange-100 w-80">
+                <svg className="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search premium products..."
+                  className="bg-transparent outline-none w-full text-sm text-gray-700 placeholder-gray-400"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                  onKeyDown={handleSearchSubmit}
+                />
+              </div>
+              
+              {/* Search Suggestions Dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden">
+                  {suggestions.map((item) => (
+                    <Link
+                      key={item.id}
+                      to={`/product/${item.id}`}
+                      className="flex items-center px-4 py-3 hover:bg-orange-50 transition-colors"
+                      onClick={() => setSearchQuery("")}
+                    >
+                      <img src={`http://127.0.0.1:8000${item.image}`} alt={item.name} className="w-10 h-10 object-cover rounded-md" />
+                      <div className="ml-3">
+                        <p className="text-sm font-medium text-gray-800">{item.name}</p>
+                        <p className="text-xs text-gray-500">${item.price}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Navigation & Cart */}
+          <div className="flex items-center space-x-6">
+            <div className="hidden md:flex space-x-8 mr-4 items-center">
+              <Link to="/" className={`text-sm font-semibold transition-colors duration-200 ${location.pathname === '/' ? 'text-orange-500' : 'text-gray-600 hover:text-orange-500'}`}>Home</Link>
+              <Link to="/" className="text-sm font-semibold text-gray-600 hover:text-orange-500 transition-colors duration-200">Shop</Link>
+              <div className="relative group" onMouseEnter={() => setIsCategoryOpen(true)} onMouseLeave={() => setIsCategoryOpen(false)}>
+                <button className="text-sm font-semibold text-gray-600 hover:text-orange-500 transition-colors duration-200 flex items-center">
+                  Categories
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                {isCategoryOpen && categories.length > 0 && (
+                  <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden z-50">
+                    {categories.map(cat => (
+                      <Link key={cat.id} to={`/?category=${cat.name}`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-500">
+                        {cat.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-4 pl-4 border-l border-gray-200">
+              {user ? (
+                <div className="flex items-center space-x-4 hidden sm:flex">
+                  <span className="text-sm font-medium text-gray-700">Hi, {user.username || 'User'}</span>
+                  <button onClick={logoutUser} className="text-sm font-semibold text-gray-600 hover:text-red-500 transition-colors duration-200">
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <Link to="/login" className="text-gray-600 hover:text-orange-500 transition-colors hidden sm:block">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </Link>
+              )}
+
+              <Link to="/cart" className="relative group">
+                <div className="flex items-center justify-center w-12 h-12 bg-gray-50 rounded-full hover:bg-orange-50 transition-colors duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-700 group-hover:text-orange-500 transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                </div>
+                {cartcount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-pink-500 text-white rounded-full h-6 w-6 flex items-center justify-center text-xs font-bold shadow-md transform scale-100 group-hover:scale-110 transition-transform duration-200">
+                    {cartcount}
+                  </span>
+                )}
+              </Link>
+            </div>
+          </div>
+          
+        </div>
+      </nav>
+    </header>
+  );
+}
+
+export default Navbar;

@@ -46,11 +46,30 @@ class UserProfile(models.Model):
 
 
 class Order(models.Model):
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('Processing', 'Processing'),
+        ('Shipped', 'Shipped'),
+        ('Delivered', 'Delivered'),
+        ('Cancelled', 'Cancelled'),
+    )
+
     user = models.ForeignKey(
         User,
         related_name="orders",
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        null=True, blank=True
     )
+    full_name = models.CharField(max_length=255, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    postal_code = models.CharField(max_length=20, null=True, blank=True)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    
+    payment_method = models.CharField(max_length=50, default='Cash on Delivery')
+    is_paid = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+
     created_at = models.DateTimeField(auto_now_add=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -58,7 +77,8 @@ class Order(models.Model):
         ordering = ("-created_at",)
 
     def __str__(self):
-        return f"Order #{self.id} - {self.user.username}"
+        username = self.user.username if self.user else "Guest"
+        return f"Order #{self.id} - {username}"
 
 
 class OrderItem(models.Model):
