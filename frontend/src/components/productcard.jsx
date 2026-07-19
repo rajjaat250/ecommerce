@@ -12,11 +12,11 @@ function ProductCard({ product }) {
         <Link to={`/product/${product.id}`} className="group block h-full">
             <div className="bg-white rounded-3xl shadow-sm hover:shadow-2xl border border-gray-100 transition-all duration-300 overflow-hidden h-full flex flex-col transform hover:-translate-y-2">
                 {/* Image Container */}
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
+                <div className="relative aspect-[3/4] w-full overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
                     <img
                         src={imageUrl}
                         alt={product.name}
-                        className="w-full h-full object-contain drop-shadow-md transform group-hover:scale-110 transition-transform duration-500 ease-out"
+                        className="w-full h-full object-cover object-top drop-shadow-md transform group-hover:scale-105 transition-transform duration-500 ease-out"
                     />
                     {/* Category Badge overlay (optional, if category data is available) */}
                     {product.category && (

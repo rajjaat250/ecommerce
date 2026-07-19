@@ -89,12 +89,12 @@ function Productlist() {
                             <div className="flex animate-[scrollX_20s_linear_infinite] whitespace-nowrap space-x-6 items-center">
                                 {/* Duplicate array to create infinite scroll effect */}
                                 {[...products.slice(0, 5), ...products.slice(0, 5)].map((product, idx) => (
-                                    <div key={`${product.id}-${idx}`} className="inline-block w-72 h-96 bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden flex-shrink-0 flex flex-col transform hover:-translate-y-3 transition-transform duration-300">
-                                        <div className="h-64 bg-gray-50 flex items-center justify-center p-6">
+                                    <div key={`${product.id}-${idx}`} className="inline-block w-64 h-96 bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden flex-shrink-0 flex flex-col transform hover:-translate-y-3 transition-transform duration-300">
+                                        <div className="h-64 bg-gray-50 flex items-center justify-center overflow-hidden">
                                             <img 
                                                 src={product.image?.startsWith('http') ? product.image : `${Baseurl}${product.image}`} 
                                                 alt={product.name} 
-                                                className="w-full h-full object-contain mix-blend-multiply drop-shadow-md hover:scale-110 transition-transform duration-500"
+                                                className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500"
                                             />
                                         </div>
                                         <div className="p-5 bg-white flex-1 border-t border-gray-50">
