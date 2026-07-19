@@ -150,6 +150,8 @@ CORS_ALLOWED_ORIGINS = [
 
 frontend_url = os.environ.get("FRONTEND_URL")
 if frontend_url:
+    if frontend_url.endswith('/'):
+        frontend_url = frontend_url[:-1]
     CORS_ALLOWED_ORIGINS.append(frontend_url)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
