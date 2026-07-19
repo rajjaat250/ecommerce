@@ -41,30 +41,84 @@ function Productlist() {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen text-xl font-semibold">
-                Loading...
+            <div className="flex justify-center items-center min-h-[70vh]">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-orange-500"></div>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="flex justify-center items-center h-screen text-red-500 text-xl">
+            <div className="flex justify-center items-center min-h-[70vh] text-red-500 text-xl font-medium bg-red-50 m-8 rounded-3xl">
                 {error}
             </div>
         );
     }
 
-    return (
-        <div className="max-w-7xl mx-auto px-6 py-8">
-            <h1 className="text-3xl font-bold mb-8 text-center">
-                Our Products
-            </h1>
+    const queryParams = new URLSearchParams(location.search);
+    const searchQuery = queryParams.get("search");
+    const categoryQuery = queryParams.get("category");
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                {products.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                ))}
+    return (
+        <div className="bg-gray-50 pb-20">
+            {/* Hero Section */}
+            {!searchQuery && !categoryQuery && (
+                <div className="relative overflow-hidden bg-white mb-16">
+                    <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-orange-50 to-transparent"></div>
+                    <div className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-orange-400/20 to-pink-500/20 rounded-full blur-3xl"></div>
+                    
+                    <div className="max-w-7xl mx-auto px-6 py-24 sm:py-32 relative z-10">
+                        <div className="max-w-2xl">
+                            <span className="inline-block py-1 px-3 rounded-full bg-orange-100 text-orange-600 font-semibold text-sm tracking-wide mb-6">New Collection 2026</span>
+                            <h1 className="text-5xl md:text-7xl font-black text-gray-900 tracking-tight leading-tight mb-8">
+                                Discover Our <br/>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Premium Picks</span>
+                            </h1>
+                            <p className="text-xl text-gray-600 mb-10 leading-relaxed font-medium">
+                                Explore a curated collection of high-end products designed to elevate your everyday lifestyle. Uncompromised quality meets stunning design.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* List Header */}
+            <div className="max-w-7xl mx-auto px-6 mb-12">
+                <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-gray-200 pb-6">
+                    <div>
+                        <h2 className="text-3xl font-bold text-gray-900">
+                            {searchQuery 
+                                ? `Search Results for "${searchQuery}"` 
+                                : categoryQuery 
+                                    ? `${categoryQuery} Collection` 
+                                    : 'Trending Now'}
+                        </h2>
+                        <p className="text-gray-500 mt-2 font-medium">
+                            Showing {products.length} {products.length === 1 ? 'product' : 'products'}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Product Grid */}
+            <div className="max-w-7xl mx-auto px-6">
+                {products.length === 0 ? (
+                    <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-100">
+                        <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-50 rounded-full mb-6">
+                            <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">No products found</h3>
+                        <p className="text-gray-500">Try adjusting your search or category filters.</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                        {products.map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

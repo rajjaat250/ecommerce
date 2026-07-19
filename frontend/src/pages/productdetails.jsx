@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useState, useEffect, useContext } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import {useCart} from "../context/Cartcontext.jsx";
+import { AuthContext } from "../context/AuthContext.jsx";
 
 function Productdetails() {
     const { id } = useParams();
     const { addProduct } = useCart();
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -93,7 +96,13 @@ function Productdetails() {
                     
                     <div className="mt-auto pt-6">
                         <button 
-                            onClick={() => addProduct(product)}
+                            onClick={() => {
+                                if (!user) {
+                                    navigate('/login');
+                                    return;
+                                }
+                                addProduct(product);
+                            }}
                             className="w-full bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white font-bold py-4 px-8 rounded-xl transition duration-300 shadow-lg hover:shadow-orange-500/30 transform hover:-translate-y-1 text-lg"
                         >
                             Add to Cart

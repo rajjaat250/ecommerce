@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useCart } from '../context/Cartcontext';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 function Checkout() {
     const { cart, clearCart } = useCart();
     const navigate = useNavigate();
+    const { user, loading: authLoading } = useContext(AuthContext);
     const BASE_URL = import.meta.env.VITE_BASE_URL;
 
     const [formData, setFormData] = useState({
@@ -21,6 +23,12 @@ function Checkout() {
     const [success, setSuccess] = useState(false);
 
     const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+    useEffect(() => {
+        if (!authLoading && !user) {
+            navigate('/login');
+        }
+    }, [user, authLoading, navigate]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;

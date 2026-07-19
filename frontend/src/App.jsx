@@ -4,6 +4,7 @@ import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
 import Productdetails from "./pages/productdetails";
 import Cart from "./pages/Cart";
 import Navbar from "./components/navbar";
+import Footer from "./components/Footer";
 import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -25,6 +26,7 @@ function App(){
               <Route path="/register" element={<Register/>}/>
             </Routes>
           </main>
+          <Footer />
         </div>
       </AuthProvider>
     </Router>
