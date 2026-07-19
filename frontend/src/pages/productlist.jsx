@@ -80,7 +80,7 @@ function Productlist() {
                         </div>
                         
                         {/* Moving Banner (Marquee) */}
-                        <div className="w-full lg:w-1/2 relative overflow-hidden h-[300px] flex items-center">
+                        <div className="w-full lg:w-1/2 relative overflow-hidden h-[450px] flex items-center">
                             {/* Gradient masks for smooth fade */}
                             <div className="absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-white to-transparent z-20"></div>
                             <div className="absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-white to-transparent z-20 lg:hidden"></div>
@@ -89,17 +89,17 @@ function Productlist() {
                             <div className="flex animate-[scrollX_20s_linear_infinite] whitespace-nowrap space-x-6 items-center">
                                 {/* Duplicate array to create infinite scroll effect */}
                                 {[...products.slice(0, 5), ...products.slice(0, 5)].map((product, idx) => (
-                                    <div key={`${product.id}-${idx}`} className="inline-block w-48 h-64 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden flex-shrink-0 flex flex-col transform hover:-translate-y-2 transition-transform duration-300">
-                                        <div className="h-40 bg-gray-50 flex items-center justify-center p-4">
+                                    <div key={`${product.id}-${idx}`} className="inline-block w-72 h-96 bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden flex-shrink-0 flex flex-col transform hover:-translate-y-3 transition-transform duration-300">
+                                        <div className="h-64 bg-gray-50 flex items-center justify-center p-6">
                                             <img 
                                                 src={product.image?.startsWith('http') ? product.image : `${Baseurl}${product.image}`} 
                                                 alt={product.name} 
-                                                className="max-h-full max-w-full object-contain"
+                                                className="w-full h-full object-contain mix-blend-multiply drop-shadow-md hover:scale-110 transition-transform duration-500"
                                             />
                                         </div>
-                                        <div className="p-4 bg-white flex-1">
-                                            <p className="text-sm font-bold text-gray-900 truncate">{product.name}</p>
-                                            <p className="text-sm font-black text-orange-500 mt-1">₹{product.price}</p>
+                                        <div className="p-5 bg-white flex-1 border-t border-gray-50">
+                                            <p className="text-lg font-bold text-gray-900 truncate">{product.name}</p>
+                                            <p className="text-lg font-black text-orange-500 mt-1">₹{product.price}</p>
                                         </div>
                                     </div>
                                 ))}
