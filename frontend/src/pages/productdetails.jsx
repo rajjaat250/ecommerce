@@ -76,6 +76,7 @@ function Productdetails() {
         : `${Baseurl}${product.image}`;
 
     return (
+        <>
         <div className="min-h-screen bg-gray-50 pb-24 relative overflow-hidden">
             {/* Background Decorative Elements */}
             <div className="absolute top-0 right-0 w-full md:w-1/2 h-[500px] bg-gradient-to-bl from-orange-200/40 via-pink-200/20 to-transparent blur-3xl pointer-events-none transform -skew-y-12"></div>
@@ -228,7 +229,7 @@ function Productdetails() {
                     </div>
                 </div>
             )}
-        </div>
+        </>
     );
 }
 
