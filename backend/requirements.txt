@@ -11,3 +11,5 @@ dj-database-url
 python-dotenv
 django-cors-headers
 Pillow
+cloudinary
+django-cloudinary-storage
