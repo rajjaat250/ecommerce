@@ -48,13 +48,13 @@ def getProducts(request):
     if category:
         products = products.filter(category__name__iexact=category)
         
-    serializer = ProductSerializer(products, many=True)
+    serializer = ProductSerializer(products, many=True, context={'request': request})
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
 def Categories(request):
     categories = Category.objects.all()
-    serializer = CategorySerializer(categories, many=True)  # ✅ categories pass karo
+    serializer = CategorySerializer(categories, many=True, context={'request': request})
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['GET'])
@@ -72,7 +72,7 @@ def getProduct(request, pk):
 def cart_view(request):
     cart = get_cart(request)
     cart_items = CartItem.objects.filter(cart=cart)
-    serializer = CartItemSerializer(cart_items, many=True)
+    serializer = CartItemSerializer(cart_items, many=True, context={'request': request})
     return JsonResponse(serializer.data, safe=False)
 
 @api_view(['POST'])
@@ -87,7 +87,7 @@ def add_to_cart(request, product_id):
     if not item_created:
         cart_item.quantity += 1
         cart_item.save()
-    serializer = CartItemSerializer(cart_item)
+    serializer = CartItemSerializer(cart_item, context={'request': request})
     return JsonResponse(serializer.data)
 
 @api_view(['POST'])
@@ -117,7 +117,7 @@ def update_cart(request, product_id):
 
     cart_item.quantity = quantity
     cart_item.save()
-    serializer = CartItemSerializer(cart_item)
+    serializer = CartItemSerializer(cart_item, context={'request': request})
     return JsonResponse(serializer.data)
 
 @api_view(['POST'])
