@@ -159,8 +159,18 @@ if frontend_url:
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage" if not DEBUG else "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 if os.getenv('CLOUDINARY_URL') or os.getenv('CLOUDINARY_CLOUD_NAME'):
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    STORAGES["default"]["BACKEND"] = "cloudinary_storage.storage.MediaCloudinaryStorage"
     if not os.getenv('CLOUDINARY_URL'):
         CLOUDINARY_STORAGE = {
             'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
